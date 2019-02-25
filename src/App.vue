@@ -20,16 +20,24 @@
         </tr>
       </thead>
       <tbody>
-        <tr v-for="(item, index) of userList" :key="index">
+        <!-- <tr v-for="(item, index) of userList" :key="index">
           <td>{{ item.id }}</td>
           <td>{{ item.name }}</td>
           <td>{{ item.phone }}</td>
           <td>{{ item.address }}</td>
           <td>
             <a @click="delUser(item.id)" href="javascript:">删除</a>&nbsp;
-            <a @click="delUser(item.id)" href="javascript:">编辑</a>
+            <a @click="delUser(item.id)" href="javascript:">编辑</a>&nbsp;
           </td>
-        </tr>
+        </tr> -->
+        <row
+          v-for="(item, index) of userList"
+          :key="index"
+          :rowData="item"
+          @delete:id="delUser($event)"
+          @update:user="saveUser"
+          :propsArray="['id', 'name', 'phone', 'address']"
+        ></row>
       </tbody>
     </table>
     <hr />
@@ -48,7 +56,7 @@
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
-        <el-button @click="addDialogVisible = false">取 消</el-button>
+        <el-button @click="addDialogVisible = false">取消</el-button>
         <el-button type="primary" @click="submitAdd()">提交</el-button>
       </span>
     </el-dialog>
@@ -78,9 +86,10 @@
 </template>
 
 <script>
-import Demo from "./components/Demo";
+import Demo from "./components/Demo.vue";
 import axios from "axios";
 import { Message, MessageBox } from "element-ui";
+import Row from "./components/Row.vue";
 
 export default {
   name: "app",
@@ -98,6 +107,10 @@ export default {
     };
   },
   methods: {
+    saveUser(e) {
+      let index = this.userList.findIndex(item => e.id === item.id);
+      this.userList.splice(index, 1, [e]);
+    },
     submitAdd() {
       this.id = Date.now();
       axios
@@ -121,7 +134,7 @@ export default {
           axios
             .delete("http://localhost:12345/users/" + id)
             .then(res => { //eslint-disable-line
-              let delIndex = this.userList.findIndex(item => item.id === id);
+              let delIndex = this.userList.findIndex(item => item.id == id);
               if (delIndex >= 0) {
                 this.userList.splice(delIndex, 1);
               }
@@ -137,7 +150,8 @@ export default {
     }
   },
   components: {
-    demo: Demo
+    demo: Demo,
+    row: Row
   },
   created() {
     axios
