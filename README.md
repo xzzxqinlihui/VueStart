@@ -1,7 +1,7 @@
-<<<<<<< HEAD
+﻿
 # VueStart
 Vue的一个练习
-=======
+
 # vuestart
 
 ## Project setup
@@ -36,4 +36,4 @@ npm run test:unit
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).
->>>>>>> first-commit no edit
+
